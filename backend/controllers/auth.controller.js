@@ -69,13 +69,22 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  try{const user = await User.findById(req.userId);
-  if (!user) {
-    return res.status(401).json({ success: false, message: "User not found" });
-  }
-  return res.status(200).json({ success: true, user: {...user._doc} });}
+  try{
+    if (!req.userId) {
+        console.log("Unauthorized");
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+      
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+        console.log("User not found");
+      return res.status(401).json({ success: false, message: "User not found" });
+      
+    }
+    return res.status(200).json({ success: true, user: {...user._doc} });
+}
   catch (error) {
-    console.log(error);
-    return res.status(500).json({ success: false, message: error.message });
+      console.log(error);
+      return res.status(500).json({ success: false, message: error.message });
   }
 };
