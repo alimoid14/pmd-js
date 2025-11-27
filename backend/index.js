@@ -2,6 +2,7 @@ import express from "express";
 import { connectDB } from "./db/connectDB.js";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
+import projectRoutes from "./routes/project.routes.js"; 
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
 
 app.listen(PORT, ()=> {
     connectDB();
