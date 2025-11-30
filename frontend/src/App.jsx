@@ -5,11 +5,17 @@ import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
 import Signup from './pages/Signup';
 import { ImSpinner3 } from "react-icons/im";
+import RedirectAuthenticatedUser from './routes/RedirectAuthenticatedUser';
+import Login from './pages/Login';
+import Layout from './Layout';
 function App() {
 const { checkAuth, isCheckingAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
+    
   }, [checkAuth]);
+
+
 
   if (isCheckingAuth)
     return (
@@ -22,8 +28,18 @@ const { checkAuth, isCheckingAuth } = useAuthStore();
   return (
     <BrowserRouter>
     <Routes>
-    <Route path='/' element={<Home/>} />
-    <Route path='/signup' element={<Signup/>} /></Routes>
+      <Route element={<Layout/>}>
+      <Route path='/' element={<Home/>} />
+      <Route path='/signup' element={
+        <RedirectAuthenticatedUser>
+          <Signup/>
+        </RedirectAuthenticatedUser>} />
+        <Route path='/login' element={
+        <RedirectAuthenticatedUser>
+          <Login/>
+        </RedirectAuthenticatedUser>} />
+        </Route>
+    </Routes>
     </BrowserRouter>
   )
 }
