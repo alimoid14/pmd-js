@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import Profile from '../components/homeComps/Profile'
+import CreateProject from '../components/homeComps/CreateProject';
+import ContributingTo from '../components/homeComps/ContributingTo';
+import MyProjects from '../components/homeComps/MyProjects';
 
 function Home() {
   const [myProject, setMyProject] = useState(true);
   const [contributingTo, setContributingTo] = useState(false);
   const [create, setCreate] = useState(false);
   return (
-    <section className='bg-gray-200 h-[calc(100vh-44px)]'>
+    <section className='bg-linear-to-br from-cyan-700 via-cyan-600 to-cyan-700 h-[calc(100vh-44px)]'>
     <section className='max-w-7xl mx-auto p-4 lg:px-6 flex flex-col gap-6'>
       <Profile />
-      <div className='flex flex-row sm:flex-row gap-4'>
+      <div className='flex flex-row sm:flex-row gap-4 lg:hidden'>
         <button className='px-4 bg-cyan-600 hover:bg-cyan-700 rounded-full text-white' onClick={() => {
           setMyProject(true); 
           setContributingTo(false);
@@ -27,9 +30,15 @@ function Home() {
         }}>Create Project</button>
       </div>
       <div className='grid lg:grid-cols-3 gap-4'>
-        <div className={`h-[50vh] bg-white p-4 ${myProject ? 'block' : 'hidden'} lg:block`}>My Projects</div>
-        <div className={`h-[50vh] bg-white p-4 ${contributingTo ? 'block' : 'hidden'} lg:block`}>Contributing to</div>
-        <div className={`h-[50vh] bg-white p-4 ${create ? 'block' : 'hidden'} lg:block`}>Creat project</div>
+        <div className={`${myProject ? 'block' : 'hidden'} lg:block`}>
+          <MyProjects />
+        </div>
+        <div className={`${contributingTo ? 'block' : 'hidden'} lg:block`}>
+          <ContributingTo />
+        </div>
+        <div className={`${create ? 'block' : 'hidden'} lg:block`}>
+          <CreateProject />
+        </div>
       </div>
       <div  className='bg-white p-4 h-[20vh]'>Previous Contributions</div>
     </section>

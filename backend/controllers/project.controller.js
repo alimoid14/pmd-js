@@ -117,3 +117,16 @@ export const deleteProject = async (req, res) => {
         res.status(500).json({success: false, message: error.message});
     }
 }
+
+export const getProject = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        if(!projectId) return res.status(400).json({success: false, message: "Project not specified"});
+        const project = await Project.findById(projectId);
+        if(!project) return res.status(404).json({success: false, message: "Project not found"});
+        res.status(200).json({success: true, project: project});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({success: false, message: error.message});
+    }
+}

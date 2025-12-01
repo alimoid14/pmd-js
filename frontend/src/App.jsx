@@ -2,18 +2,21 @@ import './App.css'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Home from './pages/Home';
 import { useAuthStore } from './store/authStore';
+import { useProjectStore } from './store/projectStore';
 import { useEffect } from 'react';
 import Signup from './pages/Signup';
 import { ImSpinner3 } from "react-icons/im";
 import RedirectAuthenticatedUser from './routes/RedirectAuthenticatedUser';
 import Login from './pages/Login';
 import Layout from './Layout';
+import Project from './pages/Project';
 function App() {
 const { checkAuth, isCheckingAuth } = useAuthStore();
+const {getProjects} = useProjectStore();
   useEffect(() => {
     checkAuth();
-    
-  }, [checkAuth]);
+    getProjects();
+  }, [checkAuth, getProjects]);
 
 
 
@@ -30,6 +33,7 @@ const { checkAuth, isCheckingAuth } = useAuthStore();
     <Routes>
       <Route element={<Layout/>}>
       <Route path='/' element={<Home/>} />
+      <Route path='/projects/:projectId' element={<Project/>} />
       <Route path='/signup' element={
         <RedirectAuthenticatedUser>
           <Signup/>
