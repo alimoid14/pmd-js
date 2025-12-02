@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Project from "../models/project.model.js";
 import Task from "../models/task.model.js";
+import { sendNotification } from "../utils/notifications.js";
 
 export const getProjects = async (req, res) => {
     try {
@@ -130,3 +131,17 @@ export const getProject = async (req, res) => {
         res.status(500).json({success: false, message: error.message});
     }
 }
+
+export const inviteToProject = async (req, res) => {
+  const { projectId, targetUserId } = req.body;
+
+  // DB logic placeholder
+
+  sendNotification(targetUserId, {
+    type: "PROJECT_INVITE",
+    projectId,
+    message: `${req.user.name} invited you to a project`,
+  });
+
+  res.json({ success: true, message: "Invitation sent" });
+};
