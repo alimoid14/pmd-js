@@ -6,10 +6,10 @@ const router = express.Router();
 
 router.post("/", verifyToken, createProject);
 router.get("/", verifyToken, getProjects);
+router.post("/invite", verifyToken, inviteToProject);
 router.get("/:id", verifyToken, getProject);
 router.post("/:id", verifyToken, addTask);
 router.put("/:id", verifyToken, updateTask);
 router.delete("/:id", verifyToken, deleteProject);
-router.post("/invite", verifyToken, inviteToProject);
 
 export default router;

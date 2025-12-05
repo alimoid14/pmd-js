@@ -4,8 +4,6 @@ import app from "./app.js";
 import { connectDB } from "./db/connectDB.js";
 import { socketHandler } from "./sockets/socket.js";
 
-
-
 // Create HTTP server
 const server = http.createServer(app);
 

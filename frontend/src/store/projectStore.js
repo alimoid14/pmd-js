@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api/projects/"
+    ? "http://localhost:5000/api/projects/"
     : "/api/projects/";
 
 export const useProjectStore = create((set) => ({
@@ -61,5 +61,16 @@ export const useProjectStore = create((set) => ({
       throw error;
     }
   },
+
+  inviteUserToProject : async (projectId, targetUserId) => {
+  const res = await fetch(API_URL + "invite", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ projectId, targetUserId }),
+  });
+
+  return res.json();
+}
 
 }));

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import Project from "../models/project.model.js";
 import Task from "../models/task.model.js";
+import Notification from "../models/notification.model.js";
+import User from "../models/user.model.js";
 import { sendNotification } from "../utils/notifications.js";
 
 export const getProjects = async (req, res) => {
@@ -133,15 +135,42 @@ export const getProject = async (req, res) => {
 }
 
 export const inviteToProject = async (req, res) => {
-  const { projectId, targetUserId } = req.body;
+  try{
+      const { projectId, targetUserId } = req.body;
 
-  // DB logic placeholder
+      if(!projectId) return res.status(400).json({ success: false, message: "Project not specified" });
+      if(!targetUserId) return res.status(400).json({ success: false, message: "User not specified" });
 
-  sendNotification(targetUserId, {
-    type: "PROJECT_INVITE",
-    projectId,
-    message: `${req.user.name} invited you to a project`,
-  });
+      const targetUser = await User.findOne({email: targetUserId});
+      const user = await User.findById(req.userId);
 
-  res.json({ success: true, message: "Invitation sent" });
+      const tui = targetUser._id;
+
+      const project = await Project.findById(projectId);
+      if(!project) return res.status(404).json({ success: false, message: "Project not found" });
+      if(project.owner.toString() !== req.userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+      if(project.admins.includes(tui)) return res.status(400).json({ success: false, message: "User is already an admin" });
+      if(project.members.includes(tui)) return res.status(400).json({ success: false, message: "User is already a member" });
+  
+      const notification = await Notification.create({
+        title: "PROJECT_INVITE",
+        project: projectId,
+        from: req.userId,
+        to: tui,
+        message: `${user.name} invited you to a project`,
+      });
+    await notification.save();
+
+    sendNotification(tui, {
+      type: "PROJECT_INVITE",
+      projectId,
+      message: `${user.name} invited you to a project`,
+    });
+  
+    res.json({ success: true, message: "Invitation sent" });
+}
+    catch (error) {
+      console.log(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
 };
