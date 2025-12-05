@@ -16,13 +16,15 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 function App() {
 const { checkAuth, isCheckingAuth, user } = useAuthStore();
 const {getProjects} = useProjectStore();
+const {getNotifications} = useNotificationStore();
 const {socket, connectSocket, disconnectSocket} = useSocketStore();
 const {addNotification} = useNotificationStore();
 
   useEffect(() => {
     checkAuth();
     getProjects();
-  }, [checkAuth, getProjects]);
+    getNotifications();
+  }, [checkAuth, getProjects, getNotifications]);
 
 
   useEffect(() => {

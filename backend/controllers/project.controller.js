@@ -71,23 +71,20 @@ export const addTask = async (req, res) => {
 export const updateTask = async (req, res) => {
     try{
         if(!req.userId) return res.status(401).json({success: false, message: "Unauthorized"});
-        const {action} = req.body;
-        if(!action) return res.status(400).json({success: false, message: "Action not specified"});
-        if(action === "update") return updateTask(req, res);
-        if(action === "delete") return deleteTask(req, res);
     }
     catch (error) {
             console.log(error);
             res.status(500).json({success: false, message: error.message});
     }
 }
-const deleteTask = async (req, res) => {
+export const deleteTask = async (req, res) => {
     try {
+        if(!req.userId) return res.status(401).json({success: false, message: "Unauthorized"});
         const projectId = req.params.id;
         if(!projectId) return res.status(400).json({success: false, message: "Project not specified"});
         const project = await Project.findById(projectId);
         if(!project) return res.status(404).json({success: false, message: "Project not found"});
-        const {taskId} = req.body;
+        const taskId = req.params.taskId;
         if(!taskId) return res.status(400).json({success: false, message: "Task not specified"});
         const task = await Task.findById(taskId);
         if(!task) return res.status(404).json({success: false, message: "Task not found"});
@@ -160,6 +157,9 @@ export const inviteToProject = async (req, res) => {
         message: `${user.name} invited you to a project`,
       });
     await notification.save();
+
+    targetUser.notifications.push(notification._id);
+    await targetUser.save();
 
     sendNotification(tui, {
       type: "PROJECT_INVITE",

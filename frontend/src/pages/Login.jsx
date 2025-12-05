@@ -2,12 +2,14 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { useProjectStore } from "../store/projectStore";
+import { useNotificationStore } from "../store/notificationStore";
 import { ImSpinner3 } from "react-icons/im";
 
 function Login() {
   const navigate = useNavigate();
   const { login, isLoading, error } = useAuthStore();
   const { getProjects } = useProjectStore();
+  const { getNotifications } = useNotificationStore();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const handleClick = async (e) => {
@@ -15,6 +17,7 @@ function Login() {
     try {
       await login(email, password);
       await getProjects();
+      await getNotifications();
       navigate("/");
     } catch (error) {
       console.log(error);
