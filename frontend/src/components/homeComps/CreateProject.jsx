@@ -24,7 +24,7 @@ function CreateProject() {
 
   }
   return (
-    <div className='h-[50vh] bg-white p-4 '>
+    <div className='h-[50vh] bg-white p-4 rounded-xl'>
         <h2 className='text-xl'>Create project</h2>
         <form className='flex flex-col gap-4 h-[90%]'>
             <input type='text' placeholder='Project title' className='bg-gray-100 rounded-full outline-none px-2' value={title} onChange={(e) => setTitle(e.target.value)}/>

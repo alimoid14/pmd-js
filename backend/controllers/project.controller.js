@@ -122,7 +122,13 @@ export const getProject = async (req, res) => {
     try {
         const projectId = req.params.id;
         if(!projectId) return res.status(400).json({success: false, message: "Project not specified"});
-        const project = await Project.findById(projectId);
+        const project = await Project.findById(projectId).populate("owner").populate("members").populate("admins").populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
         if(!project) return res.status(404).json({success: false, message: "Project not found"});
         res.status(200).json({success: true, project: project});
     } catch (error) {
@@ -133,15 +139,17 @@ export const getProject = async (req, res) => {
 
 export const inviteToProject = async (req, res) => {
   try{
-      const { projectId, targetUserId } = req.body;
+      const { targetUserEmail } = req.body;
+      const projectId = req.params.id;
 
       if(!projectId) return res.status(400).json({ success: false, message: "Project not specified" });
-      if(!targetUserId) return res.status(400).json({ success: false, message: "User not specified" });
+      if(!targetUserEmail) return res.status(400).json({ success: false, message: "User not specified" });
 
-      const targetUser = await User.findOne({email: targetUserId});
+      const targetUser = await User.findOne({email: targetUserEmail});
       const user = await User.findById(req.userId);
 
       const tui = targetUser._id;
+      //console.log(tui);
 
       const project = await Project.findById(projectId);
       if(!project) return res.status(404).json({ success: false, message: "Project not found" });
@@ -174,3 +182,24 @@ export const inviteToProject = async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export const acceptInvite = async (req, res) => {
+    try{
+        const projectId = req.params.id;
+        const project = await Project.findById(projectId);
+        const user = await User.findById(req.userId);
+        if(!user) return res.status(404).json({ success: false, message: "User not found" });
+        if(!project) return res.status(404).json({ success: false, message: "Project not found" });
+        if(project.admins.includes(req.userId)) return res.status(400).json({ success: false, message: "User is already an admin" });
+        if(project.members.includes(req.userId)) return res.status(400).json({ success: false, message: "User is already a member" });
+
+        project.members.push(req.userId);
+        await project.save();
+
+        res.json({ success: true, message: "Invitation accepted" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}

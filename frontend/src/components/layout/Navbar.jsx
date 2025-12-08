@@ -6,16 +6,33 @@ import { FaRegBell } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import {useNotificationStore} from '../../store/notificationStore';
+import { useProjectStore } from '../../store/projectStore';
+import { IoCloseSharp } from "react-icons/io5";
 
 function Navbar() {
     const navigate = useNavigate();
-    const { logout } = useAuthStore();
+    const { logout, user } = useAuthStore();
     const [notificationBarOpen, setNotificationBarOpen] = useState(false);
     const {active, resetNotifications, notifications} = useNotificationStore();
+    const [popUp, setPopUp] = useState(false);
+    const [projectDetails, setProjectDetails] = useState(null);
+    const {acceptProjectInvite} = useProjectStore();
     const handleClick = async () => {
+        setNotificationBarOpen(false);
         await logout();
         resetNotifications();
         navigate('/login', { replace: true });
+    }
+
+    const handleAccept = async () => {
+      setPopUp(false);
+      setNotificationBarOpen(false);
+      try{
+        await acceptProjectInvite(projectDetails._id);
+      }
+      catch(error){
+        console.log(error);
+      }
     }
 
   return (
@@ -26,7 +43,7 @@ function Navbar() {
               <BsMenuAppFill className='my-auto'/>
             </div>
 
-            <div className='flex flex-row gap-4'>
+            {user && <div className='flex flex-row gap-4'>
                 <div className="my-auto relative hover:cursor-pointer" onClick={() => setNotificationBarOpen(!notificationBarOpen)}>
                     <FaRegBell />
                     {active > 0 && (
@@ -43,14 +60,35 @@ function Navbar() {
                         Logout
                     </button>
                 </div>
-            </div>
-            {notificationBarOpen && <div className='absolute top-11 right-0 p-4 mr-4 lg:mr-6 flex flex-col gap-2 bg-linear-to-b from-white to-gray-200'>
+            </div>}
+            {notificationBarOpen && <div className='absolute top-11 right-0 p-4 mr-4 lg:mr-6 flex flex-col gap-2 bg-linear-to-b from-white to-gray-100 max-h-[calc(100vh-56px)] overflow-y-auto'>
       {notifications.map((noti) => (
-        <div key={noti._id} className='p-4 text-amber-500 border-b border-b-amber-700 font-bold'>
+        <div key={noti._id} className='p-4 border border-dashed rounded-2xl border-gray-300'>
+          <h3 className='text-green-600 font-bold hover:cursor-pointer'>{noti.title}</h3>
           <p>{noti.message}</p>
+          <button className='text-cyan-500' onClick={() => {
+            if(!popUp) setProjectDetails({
+              title: noti.title,
+              description: noti.message,
+              _id: noti.project
+            });
+            setPopUp(true)
+            
+          }}>View</button>
         </div>
       ))}
       </div>}
+      <div className={`fixed top-11 left-0 w-screen h-screen bg-white/50 ${popUp ? 'flex' : 'hidden'}`}>
+        <div className={`relative p-4 w-68 h-96 bg-gray-200 rounded-md text-black mx-auto my-auto flex flex-col gap-4`}>
+          <div className='absolute top-4 right-4 text-red-500 hover:cursor-pointer ' onClick={() => setPopUp(false)}><IoCloseSharp /></div>
+          <h3 className='text-xl text-amber-600 font-bold'>{projectDetails?.title}</h3>
+          <p>{projectDetails?.description}</p>
+          <div className='flex flex-row justify-between text-white'>
+            <button className='bg-green-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-green-600' onClick={handleAccept}>Accept</button>
+            <button className='bg-red-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-red-600'>Decline</button>
+          </div>
+        </div>
+      </div>
         </nav>
       
     </header>

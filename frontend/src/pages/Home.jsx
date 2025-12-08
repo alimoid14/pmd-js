@@ -40,7 +40,7 @@ function Home() {
           <CreateProject />
         </div>
       </div>
-      <div  className='bg-white p-4 h-[20vh]'>Previous Contributions</div>
+      <div  className='bg-white p-4 h-[20vh] rounded-xl'>Previous Contributions</div>
     </section>
     </section>
   )

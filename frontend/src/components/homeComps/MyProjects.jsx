@@ -5,7 +5,7 @@ function MyProjects() {
     const {projects} = useProjectStore();
     
   return (
-    <div className='h-[50vh] bg-white p-4 '>
+    <div className='h-[50vh] bg-white p-4 rounded-xl'>
       <h1>My Projects</h1>
       <div className='flex flex-col gap-4 h-[90%] overflow-auto'>
         {projects?.map((project) => (

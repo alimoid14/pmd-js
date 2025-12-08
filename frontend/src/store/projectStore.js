@@ -62,15 +62,26 @@ export const useProjectStore = create((set) => ({
     }
   },
 
-  inviteUserToProject : async (projectId, targetUserId) => {
-  const res = await fetch(API_URL + "invite", {
+  inviteUserToProject : async (projectId, targetUserEmail) => {
+  const res = await fetch(API_URL + `${projectId}/` + "invite", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ projectId, targetUserId }),
+    body: JSON.stringify({ projectId, targetUserEmail }),
   });
 
   return res.json();
-}
+},
+
+acceptProjectInvite : async (projectId) => {
+  const res = await fetch(API_URL + `${projectId}/` + "invite/accept", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ projectId }),
+  });
+
+  return res.json();
+},
 
 }));

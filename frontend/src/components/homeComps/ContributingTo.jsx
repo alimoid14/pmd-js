@@ -2,7 +2,7 @@ import React from 'react'
 
 function ContributingTo() {
   return (
-    <div className='h-[50vh] bg-white p-4 '>
+    <div className='h-[50vh] bg-white p-4 rounded-xl'>
       <h1>Contributing to</h1>
     </div>
   )
