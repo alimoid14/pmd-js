@@ -9,7 +9,7 @@ function Home() {
   const [contributingTo, setContributingTo] = useState(false);
   const [create, setCreate] = useState(false);
   return (
-    <section className='bg-linear-to-br from-cyan-700 via-cyan-600 to-cyan-700 h-[calc(100vh-44px)]'>
+    <section className='bg-linear-to-br from-black via-teal-900 to-blue-300 min-h-[calc(100vh-44px)]'>
     <section className='max-w-7xl mx-auto p-4 lg:px-6 flex flex-col gap-6'>
       <Profile />
       <div className='flex flex-row sm:flex-row gap-4 lg:hidden'>
@@ -40,7 +40,7 @@ function Home() {
           <CreateProject />
         </div>
       </div>
-      <div  className='bg-white p-4 h-[20vh] rounded-xl'>Previous Contributions</div>
+      <div  className='bg-[#c7b198]/63 p-4 h-[20vh] rounded-xl'>Previous Contributions</div>
     </section>
     </section>
   )

@@ -84,4 +84,18 @@ acceptProjectInvite : async (projectId) => {
   return res.json();
 },
 
+rejectProjectInvite : async (projectId, inviteId) => {
+  const res = await fetch(API_URL + `${projectId}/` + "invite/reject", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ inviteId }),
+  });
+
+  const data = await res.json();
+  console.log(data.message)
+
+  return data;
+}
+
 }));

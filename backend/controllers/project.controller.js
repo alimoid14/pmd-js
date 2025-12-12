@@ -203,3 +203,32 @@ export const acceptInvite = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 }
+
+
+export const rejectInvite = async (req, res) => {
+    try{
+        const projectId = req.params.id;
+        const project = await Project.findById(projectId);
+        if(!project) return res.status(404).json({ success: false, message: "Project not found" });
+        const userId = req.userId;
+        if(!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+        if(project.admins.includes(userId)) return res.status(400).json({ success: false, message: "User is already an admin" });
+        if(project.members.includes(userId)) return res.status(400).json({ success: false, message: "User is already a member" });
+
+        const { inviteId } = req.body;
+        if(!inviteId) return res.status(400).json({ success: false, message: "Notification not specified" });
+
+        await Notification.findByIdAndDelete(inviteId);
+
+        const user = await User.findById(userId);
+        if(!user) return res.status(404).json({ success: false, message: "User not found" });
+        user.notifications.pull(inviteId);
+        await user.save();
+
+        res.json({ success: true, message: "Invitation rejected" });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}

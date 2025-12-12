@@ -24,17 +24,17 @@ function CreateProject() {
 
   }
   return (
-    <div className='h-[50vh] bg-white p-4 rounded-xl'>
+    <div className='h-[50vh] bg-[#c7b198]/63 p-4 rounded-xl'>
         <h2 className='text-xl'>Create project</h2>
         <form className='flex flex-col gap-4 h-[90%]'>
-            <input type='text' placeholder='Project title' className='bg-gray-100 rounded-full outline-none px-2' value={title} onChange={(e) => setTitle(e.target.value)}/>
-            <textarea placeholder='Description' className='outline-none bg-gray-100 rounded-xl px-2 min-h-0 flex-1' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            <input type='text' placeholder='Project title' className='bg-[#f0ece2]/50 rounded-full outline-none px-2' value={title} onChange={(e) => setTitle(e.target.value)}/>
+            <textarea placeholder='Description' className='outline-none bg-[#f0ece2]/50 rounded-xl px-2 min-h-0 flex-1' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
             <div className='flex flex-col'>
               <label>Deadline</label>
-            <input type="date" className='outline-0 bg-gray-100 rounded-full px-2' value={deadline} onChange={(e) => setDeadline(e.target.value)}/>
+            <input type="date" className='outline-0 bg-[#f0ece2]/50 rounded-full px-2' value={deadline} onChange={(e) => setDeadline(e.target.value)}/>
             </div>
             
-            <button className='bg-cyan-600 hover:bg-cyan-700 text-white p-2 rounded-full' onClick={handleSubmit}>Create</button>
+            <button className='bg-[#596e79] hover:bg-cyan-700 text-white p-2 rounded-full' onClick={handleSubmit}>Create</button>
         </form>
     </div>
   )

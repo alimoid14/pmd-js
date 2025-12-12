@@ -16,8 +16,8 @@ function Navbar() {
     const {active, resetNotifications, notifications} = useNotificationStore();
     const [popUp, setPopUp] = useState(false);
     const [projectDetails, setProjectDetails] = useState(null);
-    const {acceptProjectInvite} = useProjectStore();
-    const handleClick = async () => {
+    const {acceptProjectInvite, rejectProjectInvite} = useProjectStore();
+    const handleLogout = async () => {
         setNotificationBarOpen(false);
         await logout();
         resetNotifications();
@@ -35,9 +35,22 @@ function Navbar() {
       }
     }
 
+    const handleReject = async() => {
+      setPopUp(false);
+      setNotificationBarOpen(false);
+      try {
+        console.log(projectDetails);
+        await rejectProjectInvite(projectDetails._id, projectDetails.inviteId);
+
+      }
+      catch(error){
+        console.log(error);
+      }
+    }
+
   return (
     <>
-    <header className='fixed top-0 z-50 w-screen bg-white'>
+    <header className='fixed top-0 z-50 w-screen bg-gray-400 py-1'>
         <nav className='relative w-full max-w-7xl mx-auto flex flex-row justify-between py-2 px-4 lg:px-6'>
             <div className='my-auto'>
               <BsMenuAppFill className='my-auto'/>
@@ -56,7 +69,7 @@ function Navbar() {
                     <BiUser />
                 </div>
                 <div>
-                    <button onClick={handleClick} className='bg-red-500 hover:bg-red-700 text-white px-4 rounded-full'>
+                    <button onClick={handleLogout} className='bg-red-500 hover:bg-red-700 text-white px-4 rounded-full'>
                         Logout
                     </button>
                 </div>
@@ -70,7 +83,8 @@ function Navbar() {
             if(!popUp) setProjectDetails({
               title: noti.title,
               description: noti.message,
-              _id: noti.project
+              _id: noti.project,
+              inviteId: noti._id
             });
             setPopUp(true)
             
@@ -79,13 +93,13 @@ function Navbar() {
       ))}
       </div>}
       <div className={`fixed top-11 left-0 w-screen h-screen bg-white/50 ${popUp ? 'flex' : 'hidden'}`}>
-        <div className={`relative p-4 w-68 h-96 bg-gray-200 rounded-md text-black mx-auto my-auto flex flex-col gap-4`}>
+        <div className={`relative p-4 w-68 h-96 bg-cyan-100 rounded-md text-black mx-auto my-auto flex flex-col gap-4`}>
           <div className='absolute top-4 right-4 text-red-500 hover:cursor-pointer ' onClick={() => setPopUp(false)}><IoCloseSharp /></div>
           <h3 className='text-xl text-amber-600 font-bold'>{projectDetails?.title}</h3>
           <p>{projectDetails?.description}</p>
           <div className='flex flex-row justify-between text-white'>
             <button className='bg-green-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-green-600' onClick={handleAccept}>Accept</button>
-            <button className='bg-red-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-red-600'>Decline</button>
+            <button className='bg-red-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-red-600' onClick={handleReject}>Decline</button>
           </div>
         </div>
       </div>
