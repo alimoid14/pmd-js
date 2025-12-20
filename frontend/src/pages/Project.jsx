@@ -5,9 +5,14 @@ import { useAuthStore } from '../store/authStore';
 
 function Project() {
     const {projectId} = useParams();
-    const {getProjectById, project, inviteUserToProject} = useProjectStore();   
+    const {getProjectById, project, inviteUserToProject, addProjectTask, assignTaskToUser, unassignTaskFromUser} = useProjectStore();   
     const {user} = useAuthStore();
     const [email, setEmail] = React.useState('');
+    const [taskName, setTaskName] = React.useState('');
+    const [taskDescription, setTaskDescription] = React.useState('');
+    const [taskDeadline, setTaskDeadline] = React.useState('');
+    const [assignTo, setAssignTo] = React.useState('');
+    const [taskId, setTaskId] = React.useState({});
 
     useEffect(() => {
         console.log(projectId);
@@ -22,14 +27,53 @@ function Project() {
         console.log(error);
       }
     }
+
+    const addTask = async () => {
+      try{
+        await addProjectTask(projectId, {title: taskName, description: taskDescription, deadline: taskDeadline});
+        await getProjectById(projectId);
+        setTaskName('');
+        setTaskDescription('');
+        setTaskDeadline('');
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const handleAssign = async () => {
+      try {
+        console.log(projectId, taskId, assignTo);
+        await assignTaskToUser(projectId, taskId, assignTo);
+        await getProjectById(projectId);
+        setAssignTo('');
+        setTaskId('');
+        alert('Task assigned successfully');
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    }
+
+    const handleUnsassign = async (taskId, assignedToId) => {
+      try {
+        await unassignTaskFromUser(projectId, taskId, assignedToId);
+        await getProjectById(projectId);
+        setAssignTo('');
+        setTaskId('');
+        alert('Task unassigned successfully');
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    }
   return (
-    <section className='w-full h-[calc(100vh-44px)] bg-linear-to-br from-cyan-700 via-cyan-600 to-cyan-700'>
+    <section className='w-full min-h-[calc(100vh-44px)] bg-linear-to-br from-black via-teal-900 to-blue-300'>
     <div className='max-w-7xl h-full mx-auto p-4 lg:px-6 text-white'>
       {project && (
         <div className='flex flex-col gap-4'>
           <h1 className='text-2xl font-bold'><span className='text-amber-500'>Project:</span> {project.title}</h1>
           <div>
-            
+            <p>Created by: {project.owner.name}</p>
             <p>{project.description}</p> 
             <p>Deadline: {project.deadline.split('T')[0]}</p>
             </div>
@@ -41,7 +85,58 @@ function Project() {
             </div>
 
             <div>
-              <h2 className='text-xl font-bold'>Tasks</h2>
+              
+              <div>
+              <h2 className='text-xl font-bold text-amber-300'>Members</h2>
+              <div>
+                {project.members.map((member) => (
+                  <div key={member._id} className='flex flex-row gap-2'>
+                    <p>{member.name}</p>
+                  </div>
+                ))}
+              </div>
+              </div>
+              <div>
+                <h2 className='text-xl font-bold text-amber-300'>Admins</h2>
+                <div>
+                  {project.admins.map((admin) => (
+                    <div key={admin._id} className='flex flex-row gap-2'>
+                      <p>{admin.name}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-xl font-bold text-amber-300'>Tasks</h2>
+                {project.owner._id === user._id && <div className='flex flex-col bg-gray-100/50 w-60 sm:w-96 mx-auto rounded-xl p-4 m-6'>
+                  <input type="text" placeholder='Task title' className='flex-1 outline-none' value={taskName} onChange={(e) => setTaskName(e.target.value)}/>
+                  <textarea placeholder='Task description' className='flex-1 outline-none' value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)}></textarea>
+                  <input type='date' className='flex-1 outline-none' value={taskDeadline} onChange={(e) => setTaskDeadline(e.target.value)}/>
+                  <button onClick={addTask} className='bg-cyan-600 px-4 font-bold rounded-full hover:cursor-pointer hover:bg-cyan-700 text-white'>Add task</button>
+                </div>}
+                
+                <div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4'>
+                  {project.tasks.length > 0 ? project.tasks.map((task) => (
+                    <div key={task._id} className='flex flex-col gap-2 bg-gray-100/50 rounded-xl p-4 border border-white'>
+                      <p className='text-black font-bold'>{task.title}</p>
+                      <p>{task.description}</p>
+                      <p>Deadline: {task.deadline.split('T')[0]}</p>
+                      <p>Assigned To: {task.assignedTo[1]?.name || <span className='text-red-300'>No user assigned</span>}</p>
+                      {project.owner._id === user._id && task.assignedTo.length === 1 && <div className='flex flex-col gap-2'>
+                      <input type='text' className='outline-0 bg-black/50 rounded-full px-4' placeholder='user email' value={assignTo} onChange={(e) => {
+                        setAssignTo(e.target.value);
+                        setTaskId(task._id);
+                      }}/>
+                      <button onClick={handleAssign} className='bg-cyan-600 px-4 text-white rounded-full hover:cursor-pointer hover:bg-cyan-700'>Asign above user</button>
+                      </div>}
+                      {
+                        project.owner._id === user._id && task.assignedTo.length === 2 && <button onClick={() => handleUnsassign(task._id, task.assignedTo[1]._id)} className='bg-red-600 px-4 text-white rounded-full hover:cursor-pointer hover:bg-red-700'>Unassign user</button>
+                      }
+                    </div>
+                  )) : <p>No tasks</p>}
+                </div>
+              </div>
               
             </div>
         </div>

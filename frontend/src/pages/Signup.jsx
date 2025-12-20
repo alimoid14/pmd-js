@@ -22,7 +22,7 @@ function Signup() {
     setName("");
   };
   return (
-    <section className="h-[calc(100vh-44px)] flex justify-center items-center bg-gray-200 text-gray-700">
+    <section className="h-[calc(100vh-44px)] flex justify-center items-center bg-linear-to-br from-black via-teal-900 to-blue-300 text-gray-700">
       <div className="rounded-2xl absolute bg-white/70 z-10">
         <div className="absolute w-full h-full border-2 border-dashed border-green-700 left-2 bottom-2 rounded-2xl -z-10"></div>
         <div className="flex flex-row">

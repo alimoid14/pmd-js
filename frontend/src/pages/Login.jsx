@@ -26,12 +26,12 @@ function Login() {
     setPassword("");
   };
   return (
-    <section className="h-[calc(100vh-44px)] flex justify-center items-center bg-linear-to-br from-cyan-700 via-cyan-600 to-cyan-700">
+    <section className="h-[calc(100vh-44px)] flex justify-center items-center bg-linear-to-br from-black via-teal-900 to-blue-300">
       <div className="absolute rounded-2xl z-10">
         <div className="absolute w-full h-full border-2 border-dashed border-green-700 left-2 bottom-2 rounded-2xl -z-10"></div>
         <div className="flex flex-row">
           <div className="flex-1 bg-white/70 rounded-t-2xl"></div>
-          <h2 className="text-center text-gray-600 text-2xl w-fit ml-auto px-4 pb-2 rounded-2xl">
+          <h2 className="text-center text-white text-2xl w-fit ml-auto px-4 pb-2 rounded-2xl">
             Login here!
           </h2>
         </div>

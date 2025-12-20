@@ -6,7 +6,7 @@ function Layout() {
   return (
     <div>
       <Navbar />
-      <main className='mt-11'>
+      <main className='mt-11 min-h-[calc(100vh-44px)] '>
           <Outlet />
       </main>
     </div>

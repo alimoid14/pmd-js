@@ -196,6 +196,13 @@ export const acceptInvite = async (req, res) => {
         project.members.push(req.userId);
         await project.save();
 
+        const { inviteId } = req.body;
+        if(!inviteId) return res.status(400).json({ success: false, message: "Notification not specified" });
+
+        await Notification.findByIdAndDelete(inviteId);
+        user.notifications.pull(inviteId);
+        await user.save();
+
         res.json({ success: true, message: "Invitation accepted" });
     }
     catch (error) {
@@ -228,6 +235,86 @@ export const rejectInvite = async (req, res) => {
         res.json({ success: true, message: "Invitation rejected" });
     }
     catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export const assignTask = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        const taskId = req.params.taskId;
+        const userId = req.userId;
+        const { assignToEmail } = req.body;
+
+        if(!projectId) return res.status(400).json({ success: false, message: "Project not specified" });
+        if(!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+        if(!taskId) return res.status(400).json({ success: false, message: "Task not specified" });
+
+        const owner = await User.findById(userId);
+        if(!owner) return res.status(404).json({ success: false, message: "Unauthorized" });
+        
+        const userToUnassign = await User.findOne({ email: assignToEmail });
+        if(!userToUnassign) return res.status(404).json({ success: false, message: "Invalid email entered" });
+
+        const assignTo = userToUnassign._id;
+        
+        const project = await Project.findById(projectId);
+        if(!project) return res.status(404).json({ success: false, message: "Project not found" });
+
+        if(project.owner.toString() !== userId || !project.admins.includes(userId)) return res.status(401).json({ success: false, message: "Unauthorized" });
+        if(!project.members.includes(assignTo)) return res.status(400).json({ success: false, message: "User is not a member, Tasks can only be assigned to project members" });
+
+        const task = await Task.findById(taskId);
+        if(!task) return res.status(404).json({ success: false, message: "Task not found" });
+
+        if(task.project.toString() !== projectId) return res.status(400).json({ success: false, message: "Task does not belong to project" });
+        if(task.assignedTo.includes(assignTo)) return res.status(400).json({ success: false, message: "Task is already assigned to user" });
+        if(task.assignedTo.length == 2) return res.status(400).json({ success: false, message: "Task is already assigned to a user" });
+
+        task.assignedTo.push(assignTo);
+        await task.save();
+        return res.json({ success: true, message: "Task assigned successfully" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export const unassignTask = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+        const taskId = req.params.taskId;
+        const userId = req.userId;
+        const { assignedToId } = req.body;
+
+        if(!projectId) return res.status(400).json({ success: false, message: "Project not specified" });
+        if(!userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+        if(!taskId) return res.status(400).json({ success: false, message: "Task not specified" });
+
+        const owner = await User.findById(userId);
+        if(!owner) return res.status(404).json({ success: false, message: "Unauthorized" });
+        
+        const userToUnassign = await User.findById(assignedToId);
+        if(!userToUnassign) return res.status(404).json({ success: false, message: "Invalid user entered" });
+        
+        const project = await Project.findById(projectId);
+        if(!project) return res.status(404).json({ success: false, message: "Project not found" });
+
+        if(project.owner.toString() !== userId || !project.admins.includes(userId)) return res.status(401).json({ success: false, message: "Unauthorized" });
+        if(!project.members.includes(assignedToId)) return res.status(400).json({ success: false, message: "User is not a member, Invalid request to unassign" });
+
+        const task = await Task.findById(taskId);
+        if(!task) return res.status(404).json({ success: false, message: "Task not found" });
+
+        if(task.project.toString() !== projectId) return res.status(400).json({ success: false, message: "Task does not belong to project" });
+        if(!task.assignedTo.includes(assignedToId)) return res.status(400).json({ success: false, message: "Task is not assigned to user, invalid request to unassign" });
+        if(task.assignedTo.length == 1) return res.status(400).json({ success: false, message: "No users assigned to task, invalid request to unassign" });
+
+        task.assignedTo.pull(assignedToId);
+        await task.save();
+        return res.json({ success: true, message: "Task unassigned successfully" });
+    } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: error.message });
     }
