@@ -15,7 +15,7 @@ import Project from './pages/Project';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 function App() {
 const { checkAuth, isCheckingAuth, user } = useAuthStore();
-const {getProjects} = useProjectStore();
+const {getProjects, getContributions} = useProjectStore();
 const {getNotifications} = useNotificationStore();
 const {socket, connectSocket, disconnectSocket} = useSocketStore();
 const {addNotification} = useNotificationStore();
@@ -23,8 +23,9 @@ const {addNotification} = useNotificationStore();
   useEffect(() => {
     checkAuth();
     getProjects();
+    getContributions();
     getNotifications();
-  }, [checkAuth, getProjects, getNotifications]);
+  }, [checkAuth, getProjects, getNotifications, getContributions]);
 
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const {addNotification} = useNotificationStore();
         <Home/>
         </ProtectedRoute>
       } />
-      <Route path='/projects/:projectId' element={<Project/>} />
+      <Route path='/projects/:projectId' element={<ProtectedRoute><Project/></ProtectedRoute>} />
       <Route path='/signup' element={
         <RedirectAuthenticatedUser>
           <Signup/>

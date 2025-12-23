@@ -8,7 +8,7 @@ import { ImSpinner3 } from "react-icons/im";
 function Login() {
   const navigate = useNavigate();
   const { login, isLoading, error } = useAuthStore();
-  const { getProjects } = useProjectStore();
+  const { getProjects, getContributions } = useProjectStore();
   const { getNotifications } = useNotificationStore();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -17,6 +17,7 @@ function Login() {
     try {
       await login(email, password);
       await getProjects();
+      await getContributions();
       await getNotifications();
       navigate("/");
     } catch (error) {

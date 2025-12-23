@@ -16,6 +16,19 @@ export const getProjects = async (req, res) => {
     }
 };
 
+export const getContributions = async (req, res) => {
+    try {
+        if(!req.userId) return res.status(401).json({ success: false, message: "Unauthorized" });
+        const user = await User.findById(req.userId).populate("contributingTo");
+        if(!user) return res.status(404).json({ success: false, message: "User not found" });
+        const projects = user.contributingTo;
+        res.status(200).json({ success: true, projects: projects });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
 export const createProject = async (req, res) => {
     try {
         if(!req.userId) return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -201,6 +214,8 @@ export const acceptInvite = async (req, res) => {
 
         await Notification.findByIdAndDelete(inviteId);
         user.notifications.pull(inviteId);
+        user.contributingTo.push(projectId);
+
         await user.save();
 
         res.json({ success: true, message: "Invitation accepted" });

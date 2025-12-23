@@ -1,11 +1,12 @@
 import express from "express";
-import { createProject, getProjects, addTask, updateTask, deleteTask, deleteProject, getProject, inviteToProject, acceptInvite, rejectInvite, assignTask, unassignTask} from "../controllers/project.controller.js";
+import { createProject, getProjects, addTask, updateTask, deleteTask, deleteProject, getProject, inviteToProject, acceptInvite, rejectInvite, assignTask, unassignTask, getContributions} from "../controllers/project.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
 
 router.post("/", verifyToken, createProject);
 router.get("/", verifyToken, getProjects);
+router.get("/contributions", verifyToken, getContributions);
 router.get("/:id", verifyToken, getProject);
 router.delete("/:id", verifyToken, deleteProject);
 router.post("/:id/invite", verifyToken, inviteToProject);

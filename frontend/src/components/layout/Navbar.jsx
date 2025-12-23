@@ -16,7 +16,7 @@ function Navbar() {
     const {active, resetNotifications, notifications, getNotifications} = useNotificationStore();
     const [popUp, setPopUp] = useState(false);
     const [projectDetails, setProjectDetails] = useState(null);
-    const {acceptProjectInvite, rejectProjectInvite} = useProjectStore();
+    const {acceptProjectInvite, rejectProjectInvite, getContributions} = useProjectStore();
     const handleLogout = async () => {
         setNotificationBarOpen(false);
         await logout();
@@ -30,6 +30,7 @@ function Navbar() {
       try{
         await acceptProjectInvite(projectDetails._id, projectDetails.inviteId);
         await getNotifications();
+        await getContributions();
       }
       catch(error){
         console.log(error);

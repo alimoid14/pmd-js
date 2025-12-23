@@ -7,6 +7,7 @@ const API_URL =
 
 export const useProjectStore = create((set) => ({
   projects: null,
+  contributions: null,
   project: null,
   tasks: null,
   isLoading: false,
@@ -21,6 +22,23 @@ export const useProjectStore = create((set) => ({
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
       set({ projects: data.projects, isLoading: false });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  getContributions: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "contributions", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ contributions: data.projects, isLoading: false });
+      console.log(data.projects);
     } catch (error) {
       set({ error: error.message, isLoading: false });
       throw error;
