@@ -23,10 +23,14 @@ function App() {
 
   useEffect(() => {
     checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (!user._id) return;
     getProjects();
     getContributions();
     getNotifications();
-  }, [checkAuth, getProjects, getNotifications, getContributions]);
+  }, [user, getProjects, getNotifications, getContributions]);
 
   useEffect(() => {
     if (user?._id) {
