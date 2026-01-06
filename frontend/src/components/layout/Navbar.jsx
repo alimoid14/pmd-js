@@ -60,7 +60,7 @@ function Navbar() {
           </div>
 
           {user && (
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4 my-auto">
               <div
                 className="my-auto relative hover:cursor-pointer"
                 onClick={() => setNotificationBarOpen(!notificationBarOpen)}
@@ -72,13 +72,14 @@ function Navbar() {
                   </span>
                 )}
               </div>
-              <div className="my-auto">
+              <div className="my-auto flex flex-row items-center bg-slate-100 rounded-full px-2">
                 <BiUser />
+                <p className="ml-2 text-slate-500 font-bold">{user.name}</p>
               </div>
               <div>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-700 text-white px-4 rounded-full"
+                  className="bg-red-500 hover:bg-red-700 text-white px-4 rounded-sm hover:rounded-full transition-all duration-300 ease-in-out"
                 >
                   Logout
                 </button>

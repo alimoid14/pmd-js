@@ -25,12 +25,12 @@ function CreateProject() {
   };
   return (
     <div className="h-[50vh] bg-white border border-slate-200 p-4 rounded-xl">
-      <h2 className="text-xl">Create project</h2>
+      <h2 className="text-xl font-bold mb-2">Create project</h2>
       <form className="flex flex-col gap-4 h-[90%]">
         <input
           type="text"
           placeholder="Project title"
-          className="shadow-sm rounded-full outline-none px-2"
+          className="shadow-sm rounded-sm outline-none px-2"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -51,7 +51,7 @@ function CreateProject() {
         </div>
 
         <button
-          className="border border-cyan-600 text-slate-500 hover:bg-cyan-700 hover:text-white p-2 rounded-full"
+          className="border border-cyan-600 text-slate-500 hover:bg-cyan-700 hover:text-white p-2 rounded-xl hover:rounded-full transition-all duration-300 ease-in-out"
           onClick={handleSubmit}
         >
           Create

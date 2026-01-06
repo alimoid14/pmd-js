@@ -55,8 +55,11 @@ function Home() {
             <CreateProject />
           </div>
         </div>
-        <div className="bg-white border border-slate-200 p-4 h-[20vh] rounded-xl">
-          Previous Contributions
+        <div className="bg-white border border-slate-200 p-4 h-[20vh] rounded-xl text-xl">
+          <h2 className="font-bold">Previous Contributions</h2>
+          <div className="text-center text-slate-500 flex h-[90%] items-center justify-center">
+            <p className="text-lg">No previous contributions</p>
+          </div>
         </div>
       </section>
     </section>
