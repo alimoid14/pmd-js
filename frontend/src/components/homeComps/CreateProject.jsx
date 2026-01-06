@@ -1,43 +1,63 @@
-import React, { useState } from 'react'
-import { useProjectStore } from '../../store/projectStore';
+import React, { useState } from "react";
+import { useProjectStore } from "../../store/projectStore";
 
 function CreateProject() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [deadline, setDeadline] = useState('');
-  const {createProject, getProjects} = useProjectStore();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const { createProject, getProjects } = useProjectStore();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(title, description, deadline);
 
-    try{
+    try {
       await createProject(title, description, deadline);
       await getProjects();
-      console.log('Project created successfully');
-      setTitle('');
-      setDescription('');
-      setDeadline('');
-    }catch(error){
+      console.log("Project created successfully");
+      setTitle("");
+      setDescription("");
+      setDeadline("");
+    } catch (error) {
       console.log(error);
     }
-
-  }
+  };
   return (
-    <div className='h-[50vh] bg-[#c7b198]/63 p-4 rounded-xl'>
-        <h2 className='text-xl'>Create project</h2>
-        <form className='flex flex-col gap-4 h-[90%]'>
-            <input type='text' placeholder='Project title' className='bg-[#f0ece2]/50 rounded-full outline-none px-2' value={title} onChange={(e) => setTitle(e.target.value)}/>
-            <textarea placeholder='Description' className='outline-none bg-[#f0ece2]/50 rounded-xl px-2 min-h-0 flex-1' value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-            <div className='flex flex-col'>
-              <label>Deadline</label>
-            <input type="date" className='outline-0 bg-[#f0ece2]/50 rounded-full px-2' value={deadline} onChange={(e) => setDeadline(e.target.value)}/>
-            </div>
-            
-            <button className='bg-[#596e79] hover:bg-cyan-700 text-white p-2 rounded-full' onClick={handleSubmit}>Create</button>
-        </form>
+    <div className="h-[50vh] bg-white border border-slate-200 p-4 rounded-xl">
+      <h2 className="text-xl">Create project</h2>
+      <form className="flex flex-col gap-4 h-[90%]">
+        <input
+          type="text"
+          placeholder="Project title"
+          className="shadow-sm rounded-full outline-none px-2"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Description"
+          className="outline-none shadow-sm rounded-xl px-2 min-h-0 flex-1"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        ></textarea>
+        <div className="flex flex-col">
+          <label>Deadline</label>
+          <input
+            type="date"
+            className="outline-0 shadow-sm rounded-full px-2"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+          />
+        </div>
+
+        <button
+          className="border border-cyan-600 text-slate-500 hover:bg-cyan-700 hover:text-white p-2 rounded-full"
+          onClick={handleSubmit}
+        >
+          Create
+        </button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default CreateProject
+export default CreateProject;

@@ -27,7 +27,7 @@ function Login() {
     setPassword("");
   };
   return (
-    <section className="h-[calc(100vh-44px)] flex justify-center items-center bg-linear-to-br from-black via-teal-900 to-blue-300">
+    <section className="h-[calc(100vh-64px)] flex justify-center items-center bg-linear-to-br from-black via-teal-900 to-blue-300">
       <div className="absolute rounded-2xl z-10">
         <div className="absolute w-full h-full border-2 border-dashed border-green-700 left-2 bottom-2 rounded-2xl -z-10"></div>
         <div className="flex flex-row">
@@ -75,7 +75,6 @@ function Login() {
                 Signup
               </Link>
             </p>
-            
           </form>
         </div>
       </div>

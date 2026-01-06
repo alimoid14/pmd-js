@@ -8,6 +8,7 @@ router.post("/", verifyToken, createProject);
 router.get("/", verifyToken, getProjects);
 router.get("/contributions", verifyToken, getContributions);
 router.get("/:id", verifyToken, getProject);
+router.put("/:id", verifyToken, createProject);
 router.delete("/:id", verifyToken, deleteProject);
 router.post("/:id/invite", verifyToken, inviteToProject);
 router.post("/:id/invite/accept", verifyToken, acceptInvite);
