@@ -8,7 +8,7 @@ function ContributingTo() {
     <div className="h-[50vh] bg-white border border-slate-200 p-4 rounded-xl">
       <h1 className="text-xl font-bold mb-2">Contributing to</h1>
       <div className="flex flex-col gap-4 h-[90%] overflow-auto">
-        {contributions.length > 0 ? (
+        {contributions?.length > 0 ? (
           contributions?.map((project) => (
             <div
               key={project._id}

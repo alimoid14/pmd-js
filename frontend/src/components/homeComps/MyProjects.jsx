@@ -8,7 +8,7 @@ function MyProjects() {
     <div className="h-[50vh] bg-white border border-slate-200 p-4 rounded-xl">
       <h1 className="text-xl font-bold mb-2">My Projects</h1>
       <div className="flex flex-col gap-4 h-[90%] overflow-auto">
-        {projects.length > 0 ? (
+        {projects?.length > 0 ? (
           projects?.map((project) => (
             <div
               key={project._id}
