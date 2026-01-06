@@ -549,6 +549,9 @@ export const removeUserFromProject = async (req, res) => {
       }
     }
 
+    userToRemove.contributingTo.pull(projectId);
+    await userToRemove.save();
+
     project.members.pull(userToRemove._id);
     await project.save();
     return res.json({ success: true, message: "User removed from project" });
