@@ -26,7 +26,7 @@ function App() {
   }, [checkAuth]);
 
   useEffect(() => {
-    if (!user._id) return;
+    if (!user?._id) return;
     getProjects();
     getContributions();
     getNotifications();
