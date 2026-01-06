@@ -115,6 +115,43 @@ export const updateTask = async (req, res) => {
   try {
     if (!req.userId)
       return res.status(401).json({ success: false, message: "Unauthorized" });
+    const projectId = req.params.id;
+    if (!projectId)
+      return res
+        .status(400)
+        .json({ success: false, message: "Project not specified" });
+    const project = await Project.findById(projectId);
+    if (!project)
+      return res
+        .status(404)
+        .json({ success: false, message: "Project not found" });
+    const taskId = req.params.taskId;
+    if (!taskId)
+      return res
+        .status(400)
+        .json({ success: false, message: "Task not specified" });
+    const task = await Task.findById(taskId);
+    if (!task)
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
+
+    if (task.project.toString() !== projectId)
+      return res
+        .status(404)
+        .json({ success: false, message: "Invalid request, task error" });
+
+    if (req.userId !== task.assignedTo[0].toString())
+      return res.status(404).json({ success: false, message: "Unauthorized" });
+
+    if (project.tasks.indexOf(taskId) === -1)
+      return res
+        .status(404)
+        .json({ success: false, message: "Invalid request, project error" });
+
+    task.completed = !task.completed;
+    await task.save();
+    res.status(200).json({ success: true, task: task });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });

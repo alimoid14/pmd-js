@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
-import { FaRegBell } from "react-icons/fa";
+import { FcInvite } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { useNotificationStore } from "../../store/notificationStore";
@@ -65,7 +65,7 @@ function Navbar() {
                 className="my-auto relative hover:cursor-pointer"
                 onClick={() => setNotificationBarOpen(!notificationBarOpen)}
               >
-                <FaRegBell />
+                <FcInvite />
                 {active > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
                     {active}
@@ -120,7 +120,7 @@ function Navbar() {
                   </div>
                 ))
               ) : (
-                <p className="">No notifications</p>
+                <p className="">No Invites</p>
               )}
             </div>
           )}

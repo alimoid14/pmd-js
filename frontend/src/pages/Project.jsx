@@ -13,6 +13,7 @@ function Project() {
     assignTaskToUser,
     unassignTaskFromUser,
     removeFromProject,
+    updateTask,
   } = useProjectStore();
   const { user } = useAuthStore();
   const [email, setEmail] = React.useState("");
@@ -21,6 +22,7 @@ function Project() {
   const [taskDeadline, setTaskDeadline] = React.useState("");
   const [assignTo, setAssignTo] = React.useState("");
   const [taskId, setTaskId] = React.useState({});
+  const [taskCategory, setTaskCategory] = React.useState("all");
 
   useEffect(() => {
     console.log(projectId);
@@ -86,6 +88,16 @@ function Project() {
       await removeFromProject(projectId, email);
       await getProjectById(projectId);
       alert("User removed successfully");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+  const handleTaskUpdate = async (projectId, taskId) => {
+    try {
+      await updateTask(projectId, taskId);
+      alert("Task status updated successfully");
+      await getProjectById(projectId);
     } catch (error) {
       console.log(error);
       alert(error);
@@ -205,84 +217,115 @@ function Project() {
                   </div>
                 )}
 
+                <div className="w-full my-2 flex flex-row gap-4 font-bold">
+                  <select
+                    className="outline-none"
+                    onChange={(e) => setTaskCategory(e.target.value)}
+                  >
+                    <option value="all">All Tasks</option>
+                    <option value="incomplete">Incomplete Tasks</option>
+                    <option value="complete">Completed Tasks</option>
+                  </select>
+                </div>
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4">
                   {project.tasks.length > 0 ? (
-                    project.tasks.map((task) => (
-                      <div
-                        key={task._id}
-                        className="flex flex-col gap-2 shadow-sm rounded-xl p-4 text-slate-500"
-                      >
-                        <p className="text-black font-bold">{task.title}</p>
-                        <p>
-                          Description:{" "}
-                          <span className="text-slate-900 font-bold">
-                            {task.description}
-                          </span>
-                        </p>
-                        <p>
-                          Deadline:{" "}
-                          <span className="text-slate-900 font-bold">
-                            {task.deadline.split("T")[0]}
-                          </span>
-                        </p>
-                        {/* <p className={`${task.completed && "line-through"}`}>
-                          Status:{" "}
-                          <span className="text-slate-900 font-bold">{`${
-                            task.completed ? "Completed" : "Not completed"
-                          }`}</span>
-                        </p> */}
-                        <p className="">
-                          Assigned To:{" "}
-                          {
+                    project.tasks
+                      .filter((task) => {
+                        if (taskCategory === "all") return true;
+                        if (taskCategory === "incomplete")
+                          return !task.completed;
+                        return task.completed;
+                      })
+                      .map((task) => (
+                        <div
+                          key={task._id}
+                          className="flex flex-col gap-2 shadow-sm rounded-xl p-4 text-slate-500"
+                        >
+                          <p className="text-black font-bold">{task.title}</p>
+                          <p>
+                            Description:{" "}
                             <span className="text-slate-900 font-bold">
-                              {task.assignedTo[1] ? (
-                                task.assignedTo[1].name
-                              ) : (
-                                <span className="text-slate-500 font-normal">
-                                  No user assigned
-                                </span>
-                              )}
+                              {task.description}
                             </span>
-                          }
-                        </p>
+                          </p>
+                          <p>
+                            Deadline:{" "}
+                            <span className="text-slate-900 font-bold">
+                              {task.deadline.split("T")[0]}
+                            </span>
+                          </p>
+                          <p className={`${task.completed && "line-through"}`}>
+                            Status:{" "}
+                            <span className="text-slate-900 font-bold">{`${
+                              task.completed ? "Completed" : "Not completed"
+                            }`}</span>
+                          </p>
+                          <p className="">
+                            Assigned To:{" "}
+                            {
+                              <span className="text-slate-900 font-bold">
+                                {task.assignedTo[1] ? (
+                                  task.assignedTo[1].name
+                                ) : (
+                                  <span className="text-slate-500 font-normal">
+                                    No user assigned
+                                  </span>
+                                )}
+                              </span>
+                            }
+                          </p>
 
-                        {project.owner._id === user._id &&
-                          task.assignedTo.length === 1 && (
-                            <div className="flex flex-col gap-2">
-                              <input
-                                type="text"
-                                className="outline-slate-200 rounded-full px-4"
-                                placeholder="user email"
-                                value={assignTo}
-                                onChange={(e) => {
-                                  setAssignTo(e.target.value);
-                                  setTaskId(task._id);
-                                }}
-                              />
+                          {project.owner._id === user._id &&
+                            task.assignedTo.length === 1 && (
+                              <div className="flex flex-col gap-2">
+                                <input
+                                  type="text"
+                                  className="outline-slate-200 rounded-full px-4"
+                                  placeholder="user email"
+                                  value={assignTo}
+                                  onChange={(e) => {
+                                    setAssignTo(e.target.value);
+                                    setTaskId(task._id);
+                                  }}
+                                />
+                                <button
+                                  onClick={handleAssign}
+                                  className="border border-cyan-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
+                                >
+                                  Asign above user
+                                </button>
+                              </div>
+                            )}
+                          {project.owner._id === user._id &&
+                            task.assignedTo.length === 2 && (
                               <button
-                                onClick={handleAssign}
-                                className="border border-cyan-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
+                                onClick={() =>
+                                  handleUnsassign(
+                                    task._id,
+                                    task.assignedTo[1]._id
+                                  )
+                                }
+                                className="border border-red-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
                               >
-                                Asign above user
+                                Unassign user
                               </button>
-                            </div>
-                          )}
-                        {project.owner._id === user._id &&
-                          task.assignedTo.length === 2 && (
+                            )}
+                          {project.owner._id === user._id && (
                             <button
+                              className="text-center rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer"
                               onClick={() =>
-                                handleUnsassign(
-                                  task._id,
-                                  task.assignedTo[1]._id
-                                )
+                                handleTaskUpdate(project._id, task._id)
                               }
-                              className="border border-red-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
                             >
-                              Unassign user
+                              {task.completed ? (
+                                <span>Mark as incomplete</span>
+                              ) : (
+                                <span>Mark as complete</span>
+                              )}
                             </button>
                           )}
-                      </div>
-                    ))
+                        </div>
+                      ))
                   ) : (
                     <p>No tasks</p>
                   )}

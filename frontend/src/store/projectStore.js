@@ -121,6 +121,7 @@ export const useProjectStore = create((set) => ({
   },
 
   rejectProjectInvite: async (projectId, inviteId) => {
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(API_URL + `${projectId}/` + "invite/reject", {
         method: "POST",
@@ -142,6 +143,7 @@ export const useProjectStore = create((set) => ({
   },
 
   addProjectTask: async (projectId, task) => {
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(API_URL + `${projectId}/` + "tasks", {
         method: "POST",
@@ -162,6 +164,7 @@ export const useProjectStore = create((set) => ({
 
   getProjectTasks: async (projectId) => {
     set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(API_URL + `${projectId}/` + "tasks", {
         method: "GET",
@@ -180,6 +183,7 @@ export const useProjectStore = create((set) => ({
   },
 
   assignTaskToUser: async (projectId, taskId, assignToEmail) => {
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(
         API_URL + `${projectId}/tasks/` + `${taskId}/` + "assign",
@@ -202,6 +206,7 @@ export const useProjectStore = create((set) => ({
   },
 
   unassignTaskFromUser: async (projectId, taskId, assignedToId) => {
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(
         API_URL + `${projectId}/tasks/` + `${taskId}/` + "unassign",
@@ -224,12 +229,32 @@ export const useProjectStore = create((set) => ({
   },
 
   removeFromProject: async (projectId, emailToRemove) => {
+    set({ isLoading: true, error: null });
     try {
       const res = await fetch(API_URL + `${projectId}/` + "remove-user", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ emailToRemove }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  updateTask: async (projectId, taskId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await fetch(API_URL + `${projectId}/tasks/` + `${taskId}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
       });
 
       const data = await res.json();
