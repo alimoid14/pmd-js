@@ -16,6 +16,7 @@ function Signup() {
       navigate("/");
     } catch (error) {
       console.log(error);
+      alert(error);
     }
     setEmail("");
     setPassword("");

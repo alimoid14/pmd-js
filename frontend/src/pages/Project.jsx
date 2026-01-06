@@ -12,6 +12,7 @@ function Project() {
     addProjectTask,
     assignTaskToUser,
     unassignTaskFromUser,
+    removeFromProject,
   } = useProjectStore();
   const { user } = useAuthStore();
   const [email, setEmail] = React.useState("");
@@ -32,6 +33,7 @@ function Project() {
       await inviteUserToProject(projectId, email);
     } catch (error) {
       console.log(error);
+      alert(error);
     }
   };
 
@@ -48,6 +50,7 @@ function Project() {
       setTaskDeadline("");
     } catch (error) {
       console.log(error);
+      alert(error);
     }
   };
 
@@ -72,6 +75,17 @@ function Project() {
       setAssignTo("");
       setTaskId("");
       alert("Task unassigned successfully");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  const handleRemove = async (email) => {
+    try {
+      await removeFromProject(projectId, email);
+      await getProjectById(projectId);
+      alert("User removed successfully");
     } catch (error) {
       console.log(error);
       alert(error);
@@ -135,7 +149,7 @@ function Project() {
                       {project.owner._id === user._id &&
                         project.owner._id !== member._id && (
                           <button
-                            onClick={() => handleUnsassign(taskId, member._id)}
+                            onClick={() => handleRemove(member.email)}
                             className="px-4 border border-red-500 hover:bg-red-500 hover:text-white rounded-full"
                           >
                             Remove

@@ -81,145 +81,164 @@ export const useProjectStore = create((set) => ({
     }
   },
 
-  inviteUserToProject : async (projectId, targetUserEmail) => {
+  inviteUserToProject: async (projectId, targetUserEmail) => {
     set({ isLoading: true, error: null });
-  try {
-    const res = await fetch(API_URL + `${projectId}/` + "invite", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ projectId, targetUserEmail }),
-    
-  
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
-},
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "invite", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, targetUserEmail }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-acceptProjectInvite : async (projectId, inviteId) => {
-  set({ isLoading: true, error: null });
-  try{
-    const res = await fetch(API_URL + `${projectId}/` + "invite/accept", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ inviteId }),
-  });
+  acceptProjectInvite: async (projectId, inviteId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "invite/accept", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteId }),
+      });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  console.log(data.message)
-  return data;
-  }
-  catch(error){
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
-},
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      console.log(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-rejectProjectInvite : async (projectId, inviteId) => {
-  try {
-    const res = await fetch(API_URL + `${projectId}/` + "invite/reject", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ inviteId }),
-  });
+  rejectProjectInvite: async (projectId, inviteId) => {
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "invite/reject", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteId }),
+      });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  console.log(data.message)
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      console.log(data.message);
 
-  return data;
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
-},
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-addProjectTask : async (projectId, task) => {
-  try {
-    const res = await fetch(API_URL + `${projectId}/` + "tasks", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( task ),
-  });
+  addProjectTask: async (projectId, task) => {
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "tasks", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
+      });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
-},
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-getProjectTasks : async (projectId) => {
-  set({ isLoading: true, error: null });
-  try {
-    const res = await fetch(API_URL + `${projectId}/` + "tasks", {
-    method: "GET",
-    credentials: "include",
-  });
+  getProjectTasks: async (projectId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "tasks", {
+        method: "GET",
+        credentials: "include",
+      });
 
-  const data = await res.json();
-  set({ tasks: data.tasks, isLoading: false });
-  if (!res.ok) throw new Error(data.message);
-  return data;
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
-},
+      const data = await res.json();
+      set({ tasks: data.tasks, isLoading: false });
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-assignTaskToUser : async (projectId, taskId, assignToEmail) => {
-  try {
-    const res = await fetch(API_URL + `${projectId}/tasks/` + `${taskId}/` + "assign", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ assignToEmail }),
-  });
+  assignTaskToUser: async (projectId, taskId, assignToEmail) => {
+    try {
+      const res = await fetch(
+        API_URL + `${projectId}/tasks/` + `${taskId}/` + "assign",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assignToEmail }),
+        }
+      );
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-},
+  unassignTaskFromUser: async (projectId, taskId, assignedToId) => {
+    try {
+      const res = await fetch(
+        API_URL + `${projectId}/tasks/` + `${taskId}/` + "unassign",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ assignedToId }),
+        }
+      );
 
-unassignTaskFromUser : async (projectId, taskId, assignedToId) => {
-  try {
-    const res = await fetch(API_URL + `${projectId}/tasks/` + `${taskId}/` + "unassign", {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ assignedToId }),
-  });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message);
-  return data;
-  } catch (error) {
-    console.log(error);
-    set({ error: error.message, isLoading: false });
-    throw error;
-  }
+  removeFromProject: async (projectId, emailToRemove) => {
+    try {
+      const res = await fetch(API_URL + `${projectId}/` + "remove-user", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emailToRemove }),
+      });
 
-},
-
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      console.log(error);
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 }));

@@ -20,6 +20,7 @@ function CreateProject() {
       setDeadline("");
     } catch (error) {
       console.log(error);
+      alert(error);
     }
   };
   return (

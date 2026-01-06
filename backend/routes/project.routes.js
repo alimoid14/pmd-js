@@ -1,5 +1,20 @@
 import express from "express";
-import { createProject, getProjects, addTask, updateTask, deleteTask, deleteProject, getProject, inviteToProject, acceptInvite, rejectInvite, assignTask, unassignTask, getContributions} from "../controllers/project.controller.js";
+import {
+  createProject,
+  getProjects,
+  addTask,
+  updateTask,
+  deleteTask,
+  deleteProject,
+  getProject,
+  inviteToProject,
+  acceptInvite,
+  rejectInvite,
+  assignTask,
+  unassignTask,
+  getContributions,
+  removeUserFromProject,
+} from "../controllers/project.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router();
@@ -10,6 +25,7 @@ router.get("/contributions", verifyToken, getContributions);
 router.get("/:id", verifyToken, getProject);
 router.put("/:id", verifyToken, createProject);
 router.delete("/:id", verifyToken, deleteProject);
+router.post("/:id/remove-user", verifyToken, removeUserFromProject);
 router.post("/:id/invite", verifyToken, inviteToProject);
 router.post("/:id/invite/accept", verifyToken, acceptInvite);
 router.post("/:id/invite/reject", verifyToken, rejectInvite);
