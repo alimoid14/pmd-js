@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Layout from "./Layout";
 import Project from "./pages/Project";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { Navigate } from "react-router-dom";
 function App() {
   const { checkAuth, isCheckingAuth, user } = useAuthStore();
   const { getProjects, getContributions } = useProjectStore();
