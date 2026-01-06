@@ -71,8 +71,8 @@ function Signup() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <div className="animate-spin">
-                  <ImSpinner3 />
+                <div>
+                  <ImSpinner3 className="animate-spin" />
                 </div>
               ) : (
                 "Sign Up"

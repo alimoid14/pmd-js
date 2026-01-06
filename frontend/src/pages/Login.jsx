@@ -61,8 +61,8 @@ function Login() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <div className="animate-spin">
-                  <ImSpinner3 />
+                <div className="">
+                  <ImSpinner3 className="animate-spin" />
                 </div>
               ) : (
                 "Login"
