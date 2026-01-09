@@ -1,37 +1,51 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        
+      type: String,
+      required: true,
     },
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     password: {
-        type: String,
-        required: true,
-        select: false,
+      type: String,
+      required: true,
+      select: false,
     },
     lastLogin: {
       type: Date,
       default: Date.now,
       select: false,
     },
-    projects: [{
+    projects: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
-    }],
-    notifications: [{
+      },
+    ],
+    notifications: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Notification",
-    }],
-    contributingTo: [{
+      },
+    ],
+    contributingTo: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
-    }]
-}, {timestamps: true})
+      },
+    ],
+    previousContributions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("User", userSchema);

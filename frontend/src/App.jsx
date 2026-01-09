@@ -16,7 +16,8 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { Navigate } from "react-router-dom";
 function App() {
   const { checkAuth, isCheckingAuth, user } = useAuthStore();
-  const { getProjects, getContributions } = useProjectStore();
+  const { getProjects, getContributions, getPreviousContributions } =
+    useProjectStore();
   const { getNotifications } = useNotificationStore();
   const { socket, connectSocket, disconnectSocket } = useSocketStore();
   const { addNotification } = useNotificationStore();
@@ -29,8 +30,15 @@ function App() {
     if (!user?._id) return;
     getProjects();
     getContributions();
+    getPreviousContributions();
     getNotifications();
-  }, [user, getProjects, getNotifications, getContributions]);
+  }, [
+    user,
+    getProjects,
+    getNotifications,
+    getContributions,
+    getPreviousContributions,
+  ]);
 
   useEffect(() => {
     if (user?._id) {

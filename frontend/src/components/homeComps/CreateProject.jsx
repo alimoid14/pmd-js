@@ -24,7 +24,7 @@ function CreateProject() {
     }
   };
   return (
-    <div className="h-[50vh] bg-white border border-slate-200 p-4 rounded-xl">
+    <div className="h-[45vh] bg-white border border-slate-200 p-4 rounded-xl">
       <h2 className="text-xl font-bold mb-2">Create project</h2>
       <form className="flex flex-col gap-4 h-[90%]">
         <input

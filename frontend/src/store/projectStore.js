@@ -8,6 +8,7 @@ const API_URL =
 export const useProjectStore = create((set) => ({
   projects: null,
   contributions: null,
+  previousContributions: null,
   project: null,
   tasks: null,
   isLoading: false,
@@ -38,6 +39,23 @@ export const useProjectStore = create((set) => ({
       const data = await response.json();
       if (!response.ok) throw new Error(data.message);
       set({ contributions: data.projects, isLoading: false });
+      console.log(data.projects);
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  getPreviousContributions: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "previous-contributions", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      set({ previousContributions: data.projects, isLoading: false });
       console.log(data.projects);
     } catch (error) {
       set({ error: error.message, isLoading: false });

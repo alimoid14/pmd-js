@@ -1,15 +1,15 @@
 import React from "react";
-import { useProjectStore } from "../../store/projectStore";
 import { Link } from "react-router-dom";
-function MyProjects() {
-  const { projects } = useProjectStore();
+import { useProjectStore } from "../../store/projectStore";
 
+function PreviousContributions() {
+  const { previousContributions } = useProjectStore();
   return (
-    <div className="h-[45vh] bg-white border border-slate-200 p-4 rounded-xl">
-      <h1 className="text-xl font-bold mb-2">My Projects</h1>
+    <div className="overflow-y-auto bg-white border border-slate-200 p-4 rounded-xl">
+      <h1 className="text-xl font-bold mb-2">Previous Contributions</h1>
       <div className="flex flex-col gap-4 h-[90%] overflow-auto">
-        {projects?.length > 0 ? (
-          projects?.map((project) => (
+        {previousContributions?.length > 0 ? (
+          previousContributions?.map((project) => (
             <div
               key={project._id}
               className="flex flex-col gap-2 p-4 shadow-sm rounded-2xl border border-slate-200"
@@ -26,7 +26,7 @@ function MyProjects() {
           ))
         ) : (
           <div className="text-center text-slate-500 flex h-[90%] items-center justify-center">
-            <p className="text-lg">No projects to display</p>
+            <p className="text-lg">No previous contributions</p>
           </div>
         )}
       </div>
@@ -34,4 +34,4 @@ function MyProjects() {
   );
 }
 
-export default MyProjects;
+export default PreviousContributions;

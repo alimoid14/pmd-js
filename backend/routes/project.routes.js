@@ -14,6 +14,7 @@ import {
   unassignTask,
   getContributions,
   removeUserFromProject,
+  getPreviousContributions,
 } from "../controllers/project.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
@@ -22,6 +23,7 @@ const router = express.Router();
 router.post("/", verifyToken, createProject);
 router.get("/", verifyToken, getProjects);
 router.get("/contributions", verifyToken, getContributions);
+router.get("/previous-contributions", verifyToken, getPreviousContributions);
 router.get("/:id", verifyToken, getProject);
 router.put("/:id", verifyToken, createProject);
 router.delete("/:id", verifyToken, deleteProject);

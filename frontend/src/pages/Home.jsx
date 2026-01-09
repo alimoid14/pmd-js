@@ -3,6 +3,7 @@ import Profile from "../components/homeComps/Profile";
 import CreateProject from "../components/homeComps/CreateProject";
 import ContributingTo from "../components/homeComps/ContributingTo";
 import MyProjects from "../components/homeComps/MyProjects";
+import PreviousContributions from "../components/homeComps/PreviousContributions";
 
 function Home() {
   const [myProject, setMyProject] = useState(true);
@@ -55,12 +56,7 @@ function Home() {
             <CreateProject />
           </div>
         </div>
-        <div className="bg-white border border-slate-200 p-4 h-[20vh] rounded-xl text-xl">
-          <h2 className="font-bold">Previous Contributions</h2>
-          <div className="text-center text-slate-500 flex h-[90%] items-center justify-center">
-            <p className="text-lg">No previous contributions</p>
-          </div>
-        </div>
+        <PreviousContributions />
       </section>
     </section>
   );
