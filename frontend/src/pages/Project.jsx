@@ -162,7 +162,7 @@ function Project() {
                         project.owner._id !== member._id && (
                           <button
                             onClick={() => handleRemove(member.email)}
-                            className="px-4 border border-red-500 hover:bg-red-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out"
+                            className="px-4 bg-red-100 hover:bg-red-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out"
                           >
                             Remove
                           </button>
@@ -210,7 +210,7 @@ function Project() {
                     />
                     <button
                       onClick={addTask}
-                      className="border border-cyan-600 px-4 rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer text-slate-500 hover:bg-cyan-700 hover:text-white"
+                      className="bg-cyan-100 px-4 rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer text-slate-900 font-bold hover:bg-cyan-700 hover:text-white"
                     >
                       Add task
                     </button>
@@ -290,7 +290,7 @@ function Project() {
                                 />
                                 <button
                                   onClick={handleAssign}
-                                  className="border border-cyan-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
+                                  className="bg-cyan-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
                                 >
                                   Asign above user
                                 </button>
@@ -305,22 +305,26 @@ function Project() {
                                     task.assignedTo[1]._id
                                   )
                                 }
-                                className="border border-red-600 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
+                                className="bg-red-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
                               >
                                 Unassign user
                               </button>
                             )}
                           {project.owner._id === user._id && (
                             <button
-                              className="text-center rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer"
+                              className="text-center"
                               onClick={() =>
                                 handleTaskUpdate(project._id, task._id)
                               }
                             >
                               {task.completed ? (
-                                <span>Mark as incomplete</span>
+                                <span className="bg-red-100 hover:bg-red-600 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
+                                  Mark as incomplete
+                                </span>
                               ) : (
-                                <span>Mark as complete</span>
+                                <span className="bg-cyan-100 hover:bg-cyan-700 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
+                                  Mark as complete
+                                </span>
                               )}
                             </button>
                           )}
