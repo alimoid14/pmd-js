@@ -24,11 +24,11 @@ function Signup() {
   };
   return (
     <section className="h-[calc(100vh-64px)] flex justify-center items-center bg-linear-to-br from-black via-teal-900 to-blue-300 text-gray-700">
-      <div className="rounded-2xl absolute bg-white/70 z-10">
+      <div className="rounded-2xl absolute z-10">
         <div className="absolute w-full h-full border-2 border-dashed border-green-700 left-2 bottom-2 rounded-2xl -z-10"></div>
         <div className="flex flex-row">
           <div className="flex-1 bg-white/70 rounded-t-2xl"></div>
-          <h2 className="ml-auto w-fit text-gray-700 text-2xl px-4 pb-2 bg-gray-200">
+          <h2 className="ml-auto w-fit text-white text-2xl px-4 pb-2">
             SignUp here!
           </h2>
         </div>
@@ -81,7 +81,7 @@ function Signup() {
             {error && <p className="text-center text-red-500">{error}</p>}
             <p className="text-center">
               Already have an account?{" "}
-              <Link to="/login" className="text-cyan-400">
+              <Link to="/login" className="text-cyan-600">
                 Login
               </Link>
             </p>

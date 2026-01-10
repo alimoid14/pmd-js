@@ -74,7 +74,7 @@ function Login() {
             {error && <p className="text-center text-red-500">{error}</p>}
             <p className="text-center">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-cyan-400">
+              <Link to="/signup" className="text-cyan-600">
                 Signup
               </Link>
             </p>
