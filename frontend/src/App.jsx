@@ -55,6 +55,7 @@ function App() {
     const handler = (data) => {
       console.log("🔔 Notification Received:", data);
       addNotification(data); // Save in Zustand
+      getNotifications();
     };
 
     socket.on("notification", handler);
