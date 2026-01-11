@@ -88,17 +88,19 @@ function Navbar() {
             </div>
           )}
           {notificationBarOpen && (
-            <div className="absolute top-11 right-0 p-4 mr-4 lg:mr-6 flex flex-col gap-2 text-slate-500 bg-slate-200 max-h-[calc(100vh-56px)] overflow-y-auto">
+            <div className="absolute top-16 right-0 mr-4 lg:mr-6 flex flex-col gap-2 text-slate-500 max-h-[calc(100vh-64px)] overflow-y-auto rounded-2xl">
               {notifications.length > 0 ? (
                 notifications.map((noti) => (
                   <div
                     key={noti._id}
-                    className="p-4 border border-dashed rounded-2xl border-gray-300 flex flex-col"
+                    className="p-4 border-4 rounded-2xl border-gray-300 bg-white flex flex-col"
                   >
-                    <h3 className="text-slate-500 font-bold">{noti.title}</h3>
+                    <h3 className="text-lg text-slate-900 font-bold">
+                      {noti.title}
+                    </h3>
                     <p>{noti.message}</p>
                     <button
-                      className="text-cyan-500 hover:cursor-pointer w-fit"
+                      className="text-cyan-500 hover:cursor-pointer w-fit font-bold"
                       onClick={() => {
                         if (!popUp)
                           setProjectDetails({
@@ -114,14 +116,14 @@ function Navbar() {
                     </button>
                     <Link
                       to={`/projects/${noti.project}`}
-                      className="text-cyan-500 hover:cursor-pointer"
+                      className="text-cyan-500 hover:cursor-pointer font-bold"
                     >
                       View Project
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="">No Invites</p>
+                <p className="min-w-68">No Invites</p>
               )}
             </div>
           )}
