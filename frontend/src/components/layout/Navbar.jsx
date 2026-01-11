@@ -17,11 +17,16 @@ function Navbar() {
     useNotificationStore();
   const [popUp, setPopUp] = useState(false);
   const [projectDetails, setProjectDetails] = useState(null);
-  const { acceptProjectInvite, rejectProjectInvite, getContributions } =
-    useProjectStore();
+  const {
+    acceptProjectInvite,
+    rejectProjectInvite,
+    getContributions,
+    getPreviousContributions,
+  } = useProjectStore();
   const handleLogout = async () => {
     setNotificationBarOpen(false);
     await logout();
+    alert("Logged out successfully");
     resetNotifications();
     navigate("/login", { replace: true });
   };
@@ -33,8 +38,10 @@ function Navbar() {
       await acceptProjectInvite(projectDetails._id, projectDetails.inviteId);
       await getNotifications();
       await getContributions();
+      await getPreviousContributions();
+      alert("Invitation accepted successfully");
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -45,8 +52,9 @@ function Navbar() {
       console.log(projectDetails);
       await rejectProjectInvite(projectDetails._id, projectDetails.inviteId);
       await getNotifications();
+      alert("Invitation rejected");
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 

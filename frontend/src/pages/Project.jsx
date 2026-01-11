@@ -33,8 +33,9 @@ function Project() {
     console.log("inviting");
     try {
       await inviteUserToProject(projectId, email);
+      setEmail("");
+      alert("Invitation sent successfully");
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   };
@@ -51,7 +52,6 @@ function Project() {
       setTaskDescription("");
       setTaskDeadline("");
     } catch (error) {
-      console.log(error);
       alert(error);
     }
   };

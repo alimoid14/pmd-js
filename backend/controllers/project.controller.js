@@ -303,12 +303,21 @@ export const inviteToProject = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User is already a member" });
 
+    const userAlreadyInvited = await Notification.findOne({
+      project: projectId,
+      to: tui,
+    });
+    if (userAlreadyInvited)
+      return res
+        .status(400)
+        .json({ success: false, message: "User already invited" });
+
     const notification = await Notification.create({
       title: "Project Invite",
       project: projectId,
       from: req.userId,
       to: tui,
-      message: `You have been invited by ${user.name} to their project. Accept to start contributing`,
+      message: `You have been invited by ${user.name} to their project: ${project.title}. Accept to start contributing`,
     });
     await notification.save();
 
