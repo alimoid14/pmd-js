@@ -7,6 +7,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useNotificationStore } from "../../store/notificationStore";
 import { useProjectStore } from "../../store/projectStore";
 import { IoCloseSharp } from "react-icons/io5";
+import icon from "../../assets/project.svg";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -130,31 +131,42 @@ function Navbar() {
             }`}
           >
             <div
-              className={`relative p-4 w-68 h-96 bg-gray-100 rounded-md text-black mx-auto my-auto flex flex-col gap-4`}
+              className={`relative p-4 w-68 md:w-3xl bg-white border-4 border-slate-200 rounded-md text-black mx-auto my-auto gap-4`}
             >
+              <div className="absolute w-full h-full border-4 border-dashed top-2 left-2 -z-10 border-slate-500"></div>
+              <h3 className="text-xl text-slate-500">
+                {projectDetails?.title}
+              </h3>
+
               <div
                 className="absolute top-4 right-4 text-red-500 hover:cursor-pointer "
                 onClick={() => setPopUp(false)}
               >
                 <IoCloseSharp />
               </div>
-              <h3 className="text-xl text-amber-600 font-bold">
-                {projectDetails?.title}
-              </h3>
-              <p>{projectDetails?.description}</p>
-              <div className="flex flex-row justify-between text-white">
-                <button
-                  className="bg-green-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-green-600"
-                  onClick={handleAccept}
-                >
-                  Accept
-                </button>
-                <button
-                  className="bg-red-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-red-600"
-                  onClick={handleReject}
-                >
-                  Decline
-                </button>
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                <div>
+                  <img src={icon} alt="proj-icon" />
+                </div>
+                <div className="flex flex-col gap-4 my-auto">
+                  <p className="text-slate-900 font-bold">
+                    {projectDetails?.description}
+                  </p>
+                  <div className="flex flex-row justify-between items-center text-white">
+                    <button
+                      className="bg-cyan-100 text-slate-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-cyan-700 hover:text-white"
+                      onClick={handleAccept}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      className="bg-red-100 text-slate-500 py-1 px-4 rounded-full hover:cursor-pointer hover:bg-red-600 hover:text-white"
+                      onClick={handleReject}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
