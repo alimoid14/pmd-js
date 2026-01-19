@@ -4,33 +4,39 @@ import { useState } from "react";
 import { getCroppedImage } from "../../utils/cropImage";
 import { uploadToCloudinary } from "../../utils/cloudinaryUpload";
 import { useAuthStore } from "../../store/authStore";
+import { ImSpinner3 } from "react-icons/im";
 
 export default function ImageCropper({ imageSrc, onClose }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const { saveAvatar } = useAuthStore();
+  const { isLoading, saveAvatar } = useAuthStore();
 
   const onCropComplete = (_, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
   };
 
   const handleSave = async () => {
-    // get cropped blob
-    const blob = await getCroppedImage(imageSrc, croppedAreaPixels);
+    try {
+      // get cropped blob
+      const blob = await getCroppedImage(imageSrc, croppedAreaPixels);
 
-    //  upload to cloudinary
-    const uploadResult = await uploadToCloudinary(blob);
+      //  upload to cloudinary
+      const uploadResult = await uploadToCloudinary(blob);
 
-    // save to backend
-    await saveAvatar({
-      url: uploadResult.secure_url,
-      publicId: uploadResult.public_id,
-    });
+      // save to backend
+      await saveAvatar({
+        url: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
+      });
 
-    alert("Avatar saved!");
-
-    onClose();
+      alert("Avatar saved!");
+    } catch (error) {
+      console.error("Error saving avatar:", error);
+      alert("Failed to save avatar. Please try again.");
+    } finally {
+      onClose();
+    }
   };
 
   return (
@@ -49,8 +55,9 @@ export default function ImageCropper({ imageSrc, onClose }) {
           <button
             onClick={handleSave}
             className="py-2 px-4 bg-cyan-100 hover:bg-cyan-700 hover:text-white rounded-md hover:rounded-full cursor-pointer"
+            disabled={isLoading}
           >
-            Save
+            {isLoading ? <ImSpinner3 className="animate-spin" /> : "Save"}
           </button>
           <button
             onClick={onClose}
