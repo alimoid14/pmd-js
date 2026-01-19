@@ -15,7 +15,7 @@ function Home() {
         <Profile />
         <div className="flex flex-row sm:flex-row gap-4 lg:hidden">
           <button
-            className="px-4 bg-cyan-600 hover:bg-cyan-700 rounded-full text-white"
+            className="px-4 bg-cyan-100 text-black hover:bg-cyan-700 rounded-full hover:text-white"
             onClick={() => {
               setMyProject(true);
               setContributingTo(false);
@@ -25,7 +25,7 @@ function Home() {
             My Projects
           </button>
           <button
-            className="px-4 bg-cyan-600 hover:bg-cyan-700 rounded-full text-white"
+            className="px-4 bg-cyan-100 text-black hover:bg-cyan-700 rounded-full hover:text-white"
             onClick={() => {
               setMyProject(false);
               setContributingTo(true);
@@ -35,7 +35,7 @@ function Home() {
             Contributing to
           </button>
           <button
-            className="px-4 bg-cyan-600 hover:bg-cyan-700 rounded-full text-white"
+            className="px-4 bg-cyan-100 text-black hover:bg-cyan-700 rounded-full hover:text-white"
             onClick={() => {
               setMyProject(false);
               setContributingTo(false);
