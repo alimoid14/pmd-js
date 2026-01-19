@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import ImageCropper from "./ImageCropper";
+import addProfileImage from "../../assets/addProfile.svg";
 function Profile() {
   const { user } = useAuthStore();
 
@@ -19,10 +20,7 @@ function Profile() {
       <div>
         <img
           className="w-16 h-16 rounded-full hover:cursor-pointer"
-          src={
-            user.avatar?.url ||
-            "https://www.gamebyte.com/wp-content/uploads/2022/04/39f9aecd-steve-from-minecraft-1.jpg"
-          }
+          src={user.avatar?.url || addProfileImage}
           alt="pfp"
           onClick={() => fileInputRef.current.click()}
         />
