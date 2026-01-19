@@ -44,8 +44,12 @@ const userSchema = new mongoose.Schema(
         ref: "Project",
       },
     ],
+    avatar: {
+      url: String,
+      publicId: String,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("User", userSchema);

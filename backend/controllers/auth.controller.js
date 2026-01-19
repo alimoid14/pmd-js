@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
+import crypto from "crypto";
+import cloudinary from "../config/cloudinary.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 export const signup = async (req, res) => {
   try {
@@ -97,5 +99,71 @@ export const checkAuth = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const getCloudinarySignature = (req, res) => {
+  const timestamp = Math.floor(Date.now() / 1000);
+  const userId = req.userId;
+
+  const publicId = `avatars/${userId}`;
+
+  const signature = cloudinary.utils.api_sign_request(
+    {
+      public_id: publicId,
+      timestamp,
+      overwrite: true,
+    },
+    process.env.CLOUDINARY_API_SECRET,
+  );
+
+  res.json({
+    signature,
+    timestamp,
+    publicId,
+  });
+};
+
+export const saveAvatar = async (req, res) => {
+  try {
+    const { url, publicId } = req.body;
+
+    if (!url || !publicId) {
+      return res.status(400).json({
+        message: "Avatar url and publicId are required",
+      });
+    }
+
+    const userId = req.userId; // set by verifyToken
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Optional: delete old avatar if publicId changed
+    if (user.avatar?.publicId && user.avatar.publicId !== publicId) {
+      await cloudinary.uploader.destroy(user.avatar.publicId);
+    }
+
+    user.avatar = {
+      url,
+      publicId,
+    };
+
+    await user.save();
+
+    // Remove sensitive fields before sending back
+    const sanitizedUser = user.toObject();
+    delete sanitizedUser.password;
+
+    res.status(200).json({
+      message: "Avatar updated successfully",
+      user: sanitizedUser,
+    });
+  } catch (error) {
+    console.error("Save avatar error:", error);
+    res.status(500).json({
+      message: "Failed to update avatar",
+    });
   }
 };

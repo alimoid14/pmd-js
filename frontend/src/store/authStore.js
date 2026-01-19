@@ -71,7 +71,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
   checkAuth: async () => {
-    if(get().user) return;
+    if (get().user) return;
     set({ isCheckingAuth: true, error: null });
     try {
       const response = await fetch(API_URL + "check-auth", {
@@ -99,8 +99,38 @@ export const useAuthStore = create((set, get) => ({
       });
     }
   },
-  
-  
-  
-  
+
+  getCloudinarySignature: async () => {
+    try {
+      const response = await fetch(API_URL + "cloudinary/signature", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      return data;
+    } catch (error) {
+      set({ error: error.message });
+      throw error;
+    }
+  },
+
+  saveAvatar: async (data) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await fetch(API_URL + "user/save-avatar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      set({ user: result.user, isLoading: false });
+      return result;
+    } catch (error) {
+      set({ error: error.message });
+      throw error;
+    }
+  },
 }));
