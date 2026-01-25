@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useProjectStore } from "../store/projectStore";
 import { useAuthStore } from "../store/authStore";
@@ -16,13 +16,23 @@ function Project() {
     updateTask,
   } = useProjectStore();
   const { user } = useAuthStore();
-  const [email, setEmail] = React.useState("");
-  const [taskName, setTaskName] = React.useState("");
-  const [taskDescription, setTaskDescription] = React.useState("");
-  const [taskDeadline, setTaskDeadline] = React.useState("");
-  const [assignTo, setAssignTo] = React.useState("");
-  const [taskId, setTaskId] = React.useState({});
-  const [taskCategory, setTaskCategory] = React.useState("all");
+  const [email, setEmail] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskDeadline, setTaskDeadline] = useState("");
+  const [assignTo, setAssignTo] = useState("");
+  const [taskId, setTaskId] = useState({});
+  const [taskCategory, setTaskCategory] = useState("all");
+
+  const filteredTasks = useMemo(() => {
+    return (
+      project.tasks?.filter((task) => {
+        if (taskCategory === "all") return true;
+        if (taskCategory === "incomplete") return !task.completed;
+        return task.completed;
+      }) ?? []
+    );
+  }, [project.tasks, taskCategory]);
 
   useEffect(() => {
     console.log(projectId);
@@ -228,108 +238,101 @@ function Project() {
                   </select>
                 </div>
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-4">
-                  {project.tasks.length > 0 ? (
-                    project.tasks
-                      .filter((task) => {
-                        if (taskCategory === "all") return true;
-                        if (taskCategory === "incomplete")
-                          return !task.completed;
-                        return task.completed;
-                      })
-                      .map((task) => (
-                        <div
-                          key={task._id}
-                          className="flex flex-col gap-2 shadow-sm rounded-xl p-4 text-slate-500"
-                        >
-                          <p className="text-black font-bold">{task.title}</p>
-                          <p>
-                            Description:{" "}
+                  {filteredTasks.length > 0 ? (
+                    filteredTasks.map((task) => (
+                      <div
+                        key={task._id}
+                        className="flex flex-col gap-2 shadow-sm rounded-xl p-4 text-slate-500"
+                      >
+                        <p className="text-black font-bold">{task.title}</p>
+                        <p>
+                          Description:{" "}
+                          <span className="text-slate-900 font-bold">
+                            {task.description}
+                          </span>
+                        </p>
+                        <p>
+                          Deadline:{" "}
+                          <span className="text-slate-900 font-bold">
+                            {task.deadline.split("T")[0]}
+                          </span>
+                        </p>
+                        <p className={`${task.completed && "line-through"}`}>
+                          Status:{" "}
+                          <span className="text-slate-900 font-bold">{`${
+                            task.completed ? "Completed" : "Not completed"
+                          }`}</span>
+                        </p>
+                        <p className="">
+                          Assigned To:{" "}
+                          {
                             <span className="text-slate-900 font-bold">
-                              {task.description}
-                            </span>
-                          </p>
-                          <p>
-                            Deadline:{" "}
-                            <span className="text-slate-900 font-bold">
-                              {task.deadline.split("T")[0]}
-                            </span>
-                          </p>
-                          <p className={`${task.completed && "line-through"}`}>
-                            Status:{" "}
-                            <span className="text-slate-900 font-bold">{`${
-                              task.completed ? "Completed" : "Not completed"
-                            }`}</span>
-                          </p>
-                          <p className="">
-                            Assigned To:{" "}
-                            {
-                              <span className="text-slate-900 font-bold">
-                                {task.assignedTo[1] ? (
-                                  task.assignedTo[1].name
-                                ) : (
-                                  <span className="text-slate-500 font-normal">
-                                    No user assigned
-                                  </span>
-                                )}
-                              </span>
-                            }
-                          </p>
-
-                          {project.owner._id === user._id &&
-                            task.assignedTo.length === 1 && (
-                              <div className="flex flex-col gap-2">
-                                <input
-                                  type="text"
-                                  className="outline-slate-200 rounded-full px-4"
-                                  placeholder="user email"
-                                  value={assignTo}
-                                  onChange={(e) => {
-                                    setAssignTo(e.target.value);
-                                    setTaskId(task._id);
-                                  }}
-                                />
-                                <button
-                                  onClick={handleAssign}
-                                  className="bg-cyan-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
-                                >
-                                  Asign above user
-                                </button>
-                              </div>
-                            )}
-                          {project.owner._id === user._id &&
-                            task.assignedTo.length === 2 && (
-                              <button
-                                onClick={() =>
-                                  handleUnsassign(
-                                    task._id,
-                                    task.assignedTo[1]._id
-                                  )
-                                }
-                                className="bg-red-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
-                              >
-                                Unassign user
-                              </button>
-                            )}
-                          {project.owner._id === user._id && (
-                            <button
-                              className="text-center"
-                              onClick={() =>
-                                handleTaskUpdate(project._id, task._id)
-                              }
-                            >
-                              {task.completed ? (
-                                <span className="bg-red-100 hover:bg-red-600 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
-                                  Mark as incomplete
-                                </span>
+                              {task.assignedTo[1] ? (
+                                task.assignedTo[1].name
                               ) : (
-                                <span className="bg-cyan-100 hover:bg-cyan-700 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
-                                  Mark as complete
+                                <span className="text-slate-500 font-normal">
+                                  No user assigned
                                 </span>
                               )}
+                            </span>
+                          }
+                        </p>
+
+                        {project.owner._id === user._id &&
+                          task.assignedTo.length === 1 && (
+                            <div className="flex flex-col gap-2">
+                              <input
+                                type="text"
+                                className="outline-slate-200 rounded-full px-4"
+                                placeholder="user email"
+                                value={assignTo}
+                                onChange={(e) => {
+                                  setAssignTo(e.target.value);
+                                  setTaskId(task._id);
+                                }}
+                              />
+                              <button
+                                onClick={handleAssign}
+                                className="bg-cyan-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-cyan-700"
+                              >
+                                Asign above user
+                              </button>
+                            </div>
+                          )}
+                        {project.owner._id === user._id &&
+                          task.assignedTo.length === 2 && (
+                            <button
+                              onClick={() =>
+                                handleUnsassign(
+                                  task._id,
+                                  task.assignedTo[1]._id,
+                                )
+                              }
+                              className="bg-red-100 px-4 text-slate-500 hover:text-white rounded-sm hover:rounded-full transition-all duration-300 ease-in-out hover:cursor-pointer hover:bg-red-700"
+                            >
+                              Unassign user
                             </button>
                           )}
-                        </div>
-                      ))
+                        {project.owner._id === user._id && (
+                          <button
+                            className="text-center"
+                            onClick={() =>
+                              handleTaskUpdate(project._id, task._id)
+                            }
+                          >
+                            {task.completed ? (
+                              <span className="bg-red-100 hover:bg-red-600 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
+                                Mark as incomplete
+                              </span>
+                            ) : (
+                              <span className="bg-cyan-100 hover:bg-cyan-700 hover:text-white transition-colors duration-300 block w-full h-full rounded-sm hover:rounded-full text-slate-500 border border-slate-200 hover:cursor-pointer">
+                                Mark as complete
+                              </span>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    ))
                   ) : (
                     <p>No tasks</p>
                   )}
